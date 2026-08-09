@@ -1,14 +1,14 @@
 {
   "version": "1.4.2",
   "files": {
-    "solarhp.js": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/solarhp.js",
-    "bypass.py": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/bypass.py",
-    "bypass.js": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/bypass.js",
-    "ac_bridge.js": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/ac_bridge.js",
-    "quest.ts": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/quest.ts",
-    "injector.ps1": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/injector.ps1",
-    "Menu.bat": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/Menu.bat",
-    "tsconfig.json": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/tsconfig.json",
+    "solarhp.js": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/solarhp.js",
+    "bypass.py": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/bypass.py",
+    "bypass.js": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/bypass.js",
+    "ac_bridge.js": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/ac_bridge.js",
+    "quest.ts": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/quest.ts",
+    "injector.ps1": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/injector.ps1",
+    "Menu.bat": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/Menu.bat",
+    "tsconfig.json": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/tsconfig.json",
     "menu-clicksounds/meta-menu-button-sound.wav": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/meta-menu-button-sound.wav"
   }
 }
