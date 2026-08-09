@@ -15,7 +15,7 @@ except ImportError:
 
 GAME_DIR = r"C:\Program Files (x86)\Steam\steamapps\common\Animal Company"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
-VERSION = "1.4.2"
+VERSION = "1.5.0"
 
 # ==== AUTO UPDATER CONFIG =====================================================
 # 1. Create a GitHub repo and upload the whole "SolarHP Menu fixed" folder to it.
@@ -272,7 +272,7 @@ def main():
     print_box("ITZDATREES EAC BYPASS", "Animal Company • Frida Injector")
 
     print(f"{PURPLE}   Version  :{RESET} {VERSION}")
-    print(f"{PURPLE}   Dev      :{RESET} ItzDaTree")
+    print(f"{PURPLE}   Dev      :{RESET} ItzDaTree & Theautisticone")
     print(f"{PURPLE}   Status   :{RESET} Ready")
     print()
 
