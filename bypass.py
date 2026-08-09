@@ -36,7 +36,7 @@ VERSION = "1.4.2"
 # 4. Bump the "version" field in version.json whenever you change the folder.
 #    Users' bypass.py will then auto-download the new files on next launch.
 # =============================================================================
-UPDATE_MANIFEST_URL = "https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/version.json"
+UPDATE_MANIFEST_URL = "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/version.json"
 UPDATE_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ItzDaTrees-Updater"
 VERSION_FILE = os.path.join(SCRIPT_DIR, "version.txt")
 
