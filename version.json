@@ -9,6 +9,6 @@
     "injector.ps1": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/injector.ps1",
     "Menu.bat": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/Menu.bat",
     "tsconfig.json": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/tsconfig.json",
-    "menu-clicksounds/meta-menu-button-sound.wav": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/meta-menu-button-sound.wav"
+    "menu-clicksounds/meta-menu-button-sound.wav": "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/refs/heads/main/meta-menu-button-sound.wav"
   }
 }
