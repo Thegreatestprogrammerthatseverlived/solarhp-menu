@@ -6,47 +6,6 @@ Clear-Host
 
 $GAME_DIR = 'C:\Program Files (x86)\Steam\steamapps\common\Animal Company'
 
-function Test-LauncherRenamed {
-    $animalExe = Test-Path (Join-Path $GAME_DIR 'AnimalCompany.exe')
-    $animalData = Test-Path (Join-Path $GAME_DIR 'AnimalCompany_Data')
-    $eacExe = Test-Path (Join-Path $GAME_DIR 'EACLauncher.exe')
-    $eacData = Test-Path (Join-Path $GAME_DIR 'EACLauncher_Data')
-    return (-not $animalExe -and -not $animalData -and $eacExe -and $eacData)
-}
-
-function Swap-LauncherFiles {
-    $animalExe = Join-Path $GAME_DIR 'AnimalCompany.exe'
-    $animalData = Join-Path $GAME_DIR 'AnimalCompany_Data'
-    $eacExe = Join-Path $GAME_DIR 'EACLauncher.exe'
-    $eacData = Join-Path $GAME_DIR 'EACLauncher_Data'
-
-    try {
-        if (-not (Test-Path $animalExe) -or -not (Test-Path $animalData)) {
-            Write-Host '  ✗  AnimalCompany.exe / AnimalCompany_Data not found!' -ForegroundColor Magenta
-            return $false
-        }
-
-        if (Test-Path $eacExe) {
-            Write-Host '  -  Deleting EACLauncher.exe' -ForegroundColor DarkGray
-            Remove-Item -LiteralPath $eacExe -Force
-        }
-
-        if (Test-Path $eacData) {
-            Write-Host '  -  Deleting EACLauncher_Data' -ForegroundColor DarkGray
-            Remove-Item -LiteralPath $eacData -Recurse -Force
-        }
-
-        Rename-Item -LiteralPath $animalExe -NewName 'EACLauncher.exe'
-        Rename-Item -LiteralPath $animalData -NewName 'EACLauncher_Data'
-        return $true
-    }
-    catch {
-        Write-Host "  ✗  Swap failed: $($_.Exception.Message)" -ForegroundColor Magenta
-        Write-DarkPurple '     Make sure the game is closed and run as Administrator.'
-        return $false
-    }
-}
-
 function Write-Purple($text) {
     Write-Host $text -ForegroundColor Magenta
 }
@@ -72,7 +31,7 @@ function Draw-Header {
     Write-Purple  '  ║                                                          ║'
     Write-Purple  '  ╚══════════════════════════════════════════════════════════╝'
     Write-Host ''
-    Write-DarkPurple '     Version : 1.5.0'
+    Write-DarkPurple '     Version : 1.5.1'
     Write-DarkPurple '     Status  : Ready'
     Write-Host ''
 }
@@ -154,22 +113,6 @@ function Run-Inject {
     else {
         Write-Host '  ✓  Frida found' -ForegroundColor Magenta
     }
-
-    # Check launcher file swap
-    if (Test-LauncherRenamed) {
-        Write-Host '  ✓  Launcher files already swapped' -ForegroundColor Magenta
-    }
-    else {
-        Write-Host '  ▶  Swapping launcher files (AnimalCompany -&gt; EACLauncher)...' -ForegroundColor Magenta
-        if (-not (Swap-LauncherFiles)) {
-            Write-Host ''
-            Read-Host '  Press Enter to go back'
-            return
-        }
-        Write-Host '  ✓  Launcher files swapped' -ForegroundColor Magenta
-    }
-
-    Write-Host ''
 
     # Check if game is running
     $game = Get-Process -Name 'EACLauncher' -ErrorAction SilentlyContinue

@@ -15,27 +15,7 @@ except ImportError:
 
 GAME_DIR = r"C:\Program Files (x86)\Steam\steamapps\common\Animal Company"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
-VERSION = "1.5.0"
-
-# ==== AUTO UPDATER CONFIG =====================================================
-# 1. Create a GitHub repo and upload the whole "SolarHP Menu fixed" folder to it.
-# 2. Edit UPDATE_MANIFEST_URL below to point at your version.json manifest on
-#    GitHub raw. Example:
-#      https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/version.json
-# 3. Upload a version.json that lists the current version and one raw URL per
-#    file. Example:
-#      {
-#        "version": "1.4.2",
-#        "files": {
-#          "solarhp.js":      "https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/solarhp.js",
-#          "quest.ts":        "https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/quest.ts",
-#          "bypass.py":       "https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/bypass.py",
-#          "menu-clicksounds/meta-menu-button-sound.wav": "https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/menu-clicksounds/meta-menu-button-sound.wav"
-#        }
-#      }
-# 4. Bump the "version" field in version.json whenever you change the folder.
-#    Users' bypass.py will then auto-download the new files on next launch.
-# =============================================================================
+VERSION = "1.5.1"
 UPDATE_MANIFEST_URL = "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/version.json"
 UPDATE_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ItzDaTrees-Updater"
 VERSION_FILE = os.path.join(SCRIPT_DIR, "version.txt")
@@ -196,52 +176,6 @@ def check_for_update():
         error_msg(f"Update check failed: {e}")
         return False
 
-def is_launcher_swapped():
-    animal_exe = os.path.join(GAME_DIR, "AnimalCompany.exe")
-    animal_data = os.path.join(GAME_DIR, "AnimalCompany_Data")
-    eac_exe = os.path.join(GAME_DIR, "EACLauncher.exe")
-    eac_data = os.path.join(GAME_DIR, "EACLauncher_Data")
-    return (
-        not os.path.exists(animal_exe)
-        and not os.path.exists(animal_data)
-        and os.path.exists(eac_exe)
-        and os.path.exists(eac_data)
-    )
-
-def swap_launcher_files():
-    animal_exe = os.path.join(GAME_DIR, "AnimalCompany.exe")
-    animal_data = os.path.join(GAME_DIR, "AnimalCompany_Data")
-    eac_exe = os.path.join(GAME_DIR, "EACLauncher.exe")
-    eac_data = os.path.join(GAME_DIR, "EACLauncher_Data")
-
-    if is_launcher_swapped():
-        return True
-
-    if not os.path.exists(animal_exe) or not os.path.exists(animal_data):
-        error_msg("AnimalCompany.exe / AnimalCompany_Data not found!")
-        return False
-
-    try:
-        if os.path.exists(eac_exe):
-            action_msg("Deleting EACLauncher.exe")
-            os.remove(eac_exe)
-        if os.path.isdir(eac_data):
-            import shutil
-            action_msg("Deleting EACLauncher_Data")
-            shutil.rmtree(eac_data, ignore_errors=True)
-        action_msg("Renaming AnimalCompany.exe -> EACLauncher.exe")
-        os.rename(animal_exe, eac_exe)
-        action_msg("Renaming AnimalCompany_Data -> EACLauncher_Data")
-        os.rename(animal_data, eac_data)
-        success_msg("Launcher files swapped")
-        return True
-    except PermissionError:
-        error_msg("Swap failed: a file is in use. Close the game and retry.")
-        return False
-    except Exception as e:
-        error_msg(f"Swap failed: {e}")
-        return False
-
 def inject_frida():
     bridge = os.path.join(SCRIPT_DIR, "ac_bridge.js")
     bypass = os.path.join(SCRIPT_DIR, "bypass.js")
@@ -284,15 +218,6 @@ def main():
         os.execv(sys.executable, [sys.executable] + sys.argv)
         sys.exit(0)
 
-    # Launcher file swap
-    if is_launcher_swapped():
-        success_msg("Launcher files already swapped")
-    else:
-        action_msg("Swapping launcher files (AnimalCompany -> EACLauncher)...")
-        if not swap_launcher_files():
-            print()
-            input("Press Enter to exit...")
-            sys.exit(1)
     print()
 
     # Waiting section
