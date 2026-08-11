@@ -4,8 +4,6 @@ $Host.UI.RawUI.ForegroundColor = 'White'
 $Host.UI.RawUI.WindowTitle = '🌳 ItzDaTrees Injector'
 Clear-Host
 
-$GAME_DIR = 'C:\Program Files (x86)\Steam\steamapps\common\Animal Company'
-
 function Write-Purple($text) {
     Write-Host $text -ForegroundColor Magenta
 }
@@ -31,7 +29,7 @@ function Draw-Header {
     Write-Purple  '  ║                                                          ║'
     Write-Purple  '  ╚══════════════════════════════════════════════════════════╝'
     Write-Host ''
-    Write-DarkPurple '     Version : 1.5.1'
+    Write-DarkPurple '     Version : 1.5.1.0'
     Write-DarkPurple '     Status  : Ready'
     Write-Host ''
 }

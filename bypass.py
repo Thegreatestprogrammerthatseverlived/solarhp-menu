@@ -1,10 +1,7 @@
 import os
 import sys
-import json
 import time
-import shutil
 import subprocess
-import urllib.request
 
 try:
     import psutil
@@ -15,10 +12,6 @@ except ImportError:
 
 GAME_DIR = r"C:\Program Files (x86)\Steam\steamapps\common\Animal Company"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
-VERSION = "1.5.1"
-UPDATE_MANIFEST_URL = "https://raw.githubusercontent.com/Thegreatestprogrammerthatseverlived/solarhp-menu/main/version.json"
-UPDATE_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ItzDaTrees-Updater"
-VERSION_FILE = os.path.join(SCRIPT_DIR, "version.txt")
 
 # Color scheme
 GRAY = "\033[90m"
@@ -81,101 +74,6 @@ def is_process_running(name):
             pass
     return False
 
-def http_get(url, timeout=15):
-    req = urllib.request.Request(url, headers={"User-Agent": UPDATE_UA})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return resp.read()
-
-def parse_version(v):
-    parts = []
-    for p in str(v).strip().split("."):
-        try:
-            parts.append(int(p))
-        except ValueError:
-            break
-    return tuple(parts or [0])
-
-def read_local_version():
-    try:
-        with open(VERSION_FILE, "r", encoding="utf-8") as f:
-            return f.read().strip()
-    except Exception:
-        return VERSION
-
-def get_remote_manifest():
-    try:
-        data = http_get(UPDATE_MANIFEST_URL)
-        return json.loads(data.decode("utf-8"))
-    except Exception as e:
-        error_msg(f"Update check failed: {e}")
-        return None
-
-def apply_update(manifest):
-    local_ver = read_local_version()
-    remote_ver = str(manifest.get("version", "")).strip()
-    if parse_version(remote_ver) <= parse_version(local_ver):
-        return False
-
-    files = manifest.get("files", {})
-    if not files:
-        error_msg("No files in update manifest")
-        return False
-
-    info_msg(f"Update {local_ver} -> {remote_ver} available, downloading...")
-    staging = os.path.join(SCRIPT_DIR, ".update_staging")
-    shutil.rmtree(staging, ignore_errors=True)
-    os.makedirs(staging, exist_ok=True)
-
-    downloaded = []
-    try:
-        for rel, url in files.items():
-            rel = rel.replace("\\", "/")
-            if rel.startswith("/") or ".." in rel:
-                error_msg(f"Skipping unsafe path: {rel}")
-                continue
-            dest = os.path.join(staging, rel)
-            os.makedirs(os.path.dirname(dest) or staging, exist_ok=True)
-            try:
-                data = http_get(url)
-            except Exception as e:
-                error_msg(f"Download failed: {rel} ({e})")
-                raise
-            with open(dest, "wb") as f:
-                f.write(data)
-            downloaded.append((rel, dest))
-
-        if not downloaded:
-            error_msg("Nothing downloaded")
-            return False
-
-        for rel, dest in downloaded:
-            final = os.path.join(SCRIPT_DIR, rel)
-            os.makedirs(os.path.dirname(final) or SCRIPT_DIR, exist_ok=True)
-            shutil.move(dest, final)
-            success_msg(f"Updated {rel}")
-
-        with open(VERSION_FILE, "w", encoding="utf-8") as f:
-            f.write(remote_ver)
-        shutil.rmtree(staging, ignore_errors=True)
-        success_msg(f"Update complete ({remote_ver})")
-        return True
-    except Exception as e:
-        error_msg(f"Update failed: {e}")
-        shutil.rmtree(staging, ignore_errors=True)
-        return False
-
-def check_for_update():
-    if not UPDATE_MANIFEST_URL or "USERNAME/REPO" in UPDATE_MANIFEST_URL:
-        return False
-    try:
-        manifest = get_remote_manifest()
-        if not manifest:
-            return False
-        return apply_update(manifest)
-    except Exception as e:
-        error_msg(f"Update check failed: {e}")
-        return False
-
 def inject_frida():
     bridge = os.path.join(SCRIPT_DIR, "ac_bridge.js")
     bypass = os.path.join(SCRIPT_DIR, "bypass.js")
@@ -205,19 +103,16 @@ def main():
     # Title card
     print_box("ITZDATREES EAC BYPASS", "Animal Company • Frida Injector")
 
-    print(f"{PURPLE}   Version  :{RESET} {VERSION}")
-    print(f"{PURPLE}   Dev      :{RESET} ItzDaTree & Theautisticone")
+    print(f"{PURPLE}   Version  :{RESET} 1.5.1.0")
+    print(f"{PURPLE}   Dev      :{RESET} ItzDaTree")
     print(f"{PURPLE}   Status   :{RESET} Ready")
     print()
 
-    # Auto update check
-    if check_for_update():
-        print()
-        action_msg("Restarting with updated files...")
-        print()
-        os.execv(sys.executable, [sys.executable] + sys.argv)
-        sys.exit(0)
-
+    # Manual rename notice
+    print(f"{LPURPLE}⚠{RESET}  {WHITE}Rename the files first before launching!{RESET}")
+    print(f"{GRAY}   If you need help go to:{RESET}")
+    print(f"{PURPLE}   https://itzdatreesmenu.lovable.app{RESET}")
+    print(f"{GRAY}   and open the {WHITE}Rename{GRAY} tab.{RESET}")
     print()
 
     # Waiting section
