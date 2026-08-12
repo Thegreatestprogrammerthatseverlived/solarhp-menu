@@ -91,6 +91,55 @@ def inject_frida():
         error_msg(f"Injection failed: {e}")
         return False
 
+def rename_pair(src, dst):
+    if os.path.exists(dst):
+        if os.path.exists(src):
+            try:
+                os.remove(dst)
+                success_msg(f"Deleted {os.path.basename(dst)}")
+                os.rename(src, dst)
+                success_msg(f"Renamed {os.path.basename(src)} -> {os.path.basename(dst)}")
+                return True
+            except OSError as e:
+                error_msg(f"Could not refresh {os.path.basename(dst)}: {e}")
+                return False
+        success_msg(f"{os.path.basename(dst)} already in place")
+        return True
+    if os.path.exists(src):
+        try:
+            os.rename(src, dst)
+            success_msg(f"Renamed {os.path.basename(src)} -> {os.path.basename(dst)}")
+            return True
+        except OSError as e:
+            error_msg(f"Could not rename {os.path.basename(src)}: {e}")
+            return False
+    error_msg(f"Neither {os.path.basename(src)} nor {os.path.basename(dst)} found.")
+    return False
+
+def ensure_game_renamed():
+    ac_exe = os.path.join(GAME_DIR, "AnimalCompany.exe")
+    eac_exe = os.path.join(GAME_DIR, "EACLauncher.exe")
+    ac_data = os.path.join(GAME_DIR, "AnimalCompany_data")
+    eac_data = os.path.join(GAME_DIR, "EACLauncher_data")
+
+    if not os.path.isdir(GAME_DIR):
+        error_msg(f"Game directory not found: {GAME_DIR}")
+        info_msg("Edit GAME_DIR at the top of bypass.py if your install is elsewhere.")
+        return False
+
+    if is_process_running("AnimalCompany.exe") or is_process_running("EACLauncher.exe"):
+        error_msg("Close the game before renaming files.")
+        return False
+
+    if os.path.exists(eac_exe) and os.path.exists(eac_data):
+        success_msg("Files already renamed. Skipping.")
+        return True
+
+    action_msg("Checking game files...")
+    ok = rename_pair(ac_exe, eac_exe)
+    ok = rename_pair(ac_data, eac_data) and ok
+    return ok
+
 def main():
     try:
         kernel32 = __import__('ctypes').windll.kernel32
@@ -108,12 +157,11 @@ def main():
     print(f"{PURPLE}   Status   :{RESET} Ready")
     print()
 
-    # Manual rename notice
-    print(f"{LPURPLE}⚠{RESET}  {WHITE}Rename the files first before launching!{RESET}")
-    print(f"{GRAY}   If you need help go to:{RESET}")
-    print(f"{PURPLE}   https://itzdatreesmenu.lovable.app{RESET}")
-    print(f"{GRAY}   and open the {WHITE}Rename{GRAY} tab.{RESET}")
-    print()
+    # Auto-rename check
+    if not ensure_game_renamed():
+        print()
+        error_msg("Fix the issue above, then run this again.")
+        return
 
     # Waiting section
     waiting_box("Waiting for Game")
