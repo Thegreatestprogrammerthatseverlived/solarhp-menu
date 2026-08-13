@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import subprocess
+import shutil
 
 try:
     import psutil
@@ -91,11 +92,17 @@ def inject_frida():
         error_msg(f"Injection failed: {e}")
         return False
 
+def remove_path(path):
+    if os.path.isdir(path):
+        shutil.rmtree(path)
+    else:
+        os.remove(path)
+
 def rename_pair(src, dst):
     if os.path.exists(dst):
         if os.path.exists(src):
             try:
-                os.remove(dst)
+                remove_path(dst)
                 success_msg(f"Deleted {os.path.basename(dst)}")
                 os.rename(src, dst)
                 success_msg(f"Renamed {os.path.basename(src)} -> {os.path.basename(dst)}")
@@ -131,7 +138,8 @@ def ensure_game_renamed():
         error_msg("Close the game before renaming files.")
         return False
 
-    if os.path.exists(eac_exe) and os.path.exists(eac_data):
+    # Already renamed only when the AnimalCompany sources are gone.
+    if not os.path.exists(ac_exe) and not os.path.exists(ac_data):
         success_msg("Files already renamed. Skipping.")
         return True
 
@@ -157,10 +165,12 @@ def main():
     print(f"{PURPLE}   Status   :{RESET} Ready")
     print()
 
-    # Auto-rename check
+    # Auto-rename check (runs the moment the script starts)
     if not ensure_game_renamed():
         print()
         error_msg("Fix the issue above, then run this again.")
+        print()
+        input("Press Enter to exit...")
         return
 
     # Waiting section
@@ -195,4 +205,9 @@ def main():
         print()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print()
+        print(f"Unexpected error: {e}")
+        input("Press Enter to exit...")
