@@ -152,7 +152,7 @@ def main():
     # Title card
     print_box("ITZDATREES EAC BYPASS", "Animal Company • Frida Injector")
 
-    print(f"{PURPLE}   Version  :{RESET} 1.5.1.0")
+    print(f"{PURPLE}   Version  :{RESET} 1.5.2.3")
     print(f"{PURPLE}   Dev      :{RESET} ItzDaTree & Theautisticone")
     print(f"{PURPLE}   Status   :{RESET} Ready")
     print()
