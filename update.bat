@@ -17,7 +17,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "function Get-Tuple($v){$p=@(($v -replace '[^\d\.]','') -split '\.' | ForEach-Object{[int]$_}); while($p.Count -lt 4){$p+=0}; return ,$p};" ^
   "function Is-Newer($r,$l){if(-not $l){return $true}; $a=Get-Tuple $r; $b=Get-Tuple $l; for($i=0;$i -lt 4;$i++){if($a[$i] -gt $b[$i]){return $true}; if($a[$i] -lt $b[$i]){return $false}}; return $false};" ^
   "Write-Host '  Fetching update manifest...';" ^
-  "$remote=Invoke-RestMethod -Uri '%REMOTE_URL%' -TimeoutSec 20;" ^
+  "$remote=((New-Object System.Net.WebClient).DownloadString('%REMOTE_URL%')) | ConvertFrom-Json;" ^
   "$localVersion='';" ^
   "if(Test-Path $base){try{$local=Get-Content $base -Raw | ConvertFrom-Json; $localVersion=[string]$local.version}catch{}};" ^
   "if(Is-Newer $remote.version $localVersion){" ^
@@ -28,7 +28,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "      $dest=Join-Path (Get-Location) $name;" ^
   "      $dir=Split-Path -Parent $dest;" ^
   "      if($dir -and -not (Test-Path $dir)){New-Item -ItemType Directory -Path $dir -Force | Out-Null};" ^
-  "      Invoke-WebRequest -Uri $url -OutFile $dest -TimeoutSec 60;" ^
+  "      (New-Object System.Net.WebClient).DownloadFile($url, $dest);" ^
   "      Write-Host ('  [OK]  ' + $name) -ForegroundColor Green;" ^
   "    }catch{" ^
   "      Write-Host ('  [FAIL] ' + $name + ' : ' + $_.Exception.Message) -ForegroundColor Red;" ^
@@ -38,7 +38,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "  Write-Host '  Update complete.' -ForegroundColor Green;" ^
   "}else{" ^
   "  Write-Host ('  Already up to date (' + $localVersion + ').') -ForegroundColor Green;" ^
-  "}"
+  "};" ^
+  "exit 0"
 
 if %errorlevel% neq 0 (
   echo.
@@ -46,5 +47,4 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-pause
 exit /b 0
