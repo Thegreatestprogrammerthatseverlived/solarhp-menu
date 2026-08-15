@@ -29,7 +29,7 @@ function Draw-Header {
     Write-Purple  '  ║                                                          ║'
     Write-Purple  '  ╚══════════════════════════════════════════════════════════╝'
     Write-Host ''
-    Write-DarkPurple '     Version : 1.5.2.3'
+    Write-DarkPurple '     Version : 1.5.2.5'
     Write-DarkPurple '     Status  : Ready'
     Write-Host ''
 }
